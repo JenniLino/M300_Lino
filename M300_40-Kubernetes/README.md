@@ -14,9 +14,9 @@ Testfälle
 ======
 | Testfall                                                   | geschätztes Ergebniss                       | effektives Ergebnis |
 | ---------------------------------------------------------- | ------------------------------------------- | ------------------- |
-| 1. Kubernetes erstellen                                    | Kubernetes wird erfolgreich erstellt        | korrekt             |
-| 3. Kubernetes ist abrufbar                                 | Kubernetes konnte abgerufen werden          | korrekt             |
-| 4. Reproduzierbarkeit                                      | Kubernetes wird genau gleich erstellt       | korrekt             |
-| 5. Kubernetes kann von jemand anderes auch erstellt werden | bei luka/aimo genau gleich erstellt               | korrekt             |
+| 1. Kubernetes erstellen                                    | Kubernetes wird erfolgreich erstellt        | JA             |
+| 3. Kubernetes ist abrufbar                                 | Kubernetes konnte abgerufen werden          | JA             |
+| 4. Reproduzierbarkeit                                      | Kubernetes wird genau gleich erstellt       | JA             |
+| 5. Kubernetes kann von jemand anderes auch erstellt werden | bei luka/aimo genau gleich erstellt         | JA            |
 
 [&uarr; nach oben](https://github.com/JenniLino/M300_Lino/tree/main/M300_40-Kubernetes)
