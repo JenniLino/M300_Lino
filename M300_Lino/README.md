@@ -69,5 +69,5 @@ Mit ```vagrant ssh``` kann man sich nun auf die VM verbinden.
     | `vagrant suspend`    | Pausiert die laufende VM                                |
     | `vagrant resume`     | Nimmt eine pausierte VM wieder auf                      |
     | `vagrant provision`  | Führt eine erneute Provisionierung auf der VM durch     |
-
+ 
 
