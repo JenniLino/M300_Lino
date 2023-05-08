@@ -1,0 +1,36 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "ubuntu/focal64"
+
+  config.vm.define "vm1" do |vm1|
+    vm1.vm.hostname = "vm1"
+    vm1.vm.network "private_network", ip: "192.168.33.10"
+    vm1.vm.provision "shell", inline: <<-SHELL
+      sudo apt-get update
+      sudo apt-get install -y sshpass
+      [ ! -f /home/vagrant/.ssh/id_rsa ] && ssh-keygen -t rsa -b 4096 -f /home/vagrant/.ssh/id_rsa -N "" -C "vagrant@vm1"
+      chmod 600 /home/vagrant/.ssh/id_rsa
+      sleep 30
+      sshpass -p 'vagrant' ssh-copy-id -i /home/vagrant/.ssh/id_rsa.pub -o StrictHostKeyChecking=no vagrant@192.168.33.11
+      sudo apt-get install -y autossh
+      autossh -M 0 -f -N -L 2222:localhost:22 -i /home/vagrant/.ssh/id_rsa vagrant@192.168.33.11
+    SHELL
+  end
+
+  config.vm.define "vm2" do |vm2|
+    vm2.vm.hostname = "vm2"
+    vm2.vm.network "private_network", ip: "192.168.33.11"
+    vm2.vm.provision "shell", inline: <<-SHELL
+      sudo apt-get update
+      sudo apt-get install -y sshpass
+      [ ! -f /home/vagrant/.ssh/id_rsa ] && ssh-keygen -t rsa -b 4096 -f /home/vagrant/.ssh/id_rsa -N "" -C "vagrant@vm2"
+      chmod 600 /home/vagrant/.ssh/id_rsa
+      sleep 30
+      sshpass -p 'vagrant' ssh-copy-id -i /home/vagrant/.ssh/id_rsa.pub -o StrictHostKeyChecking=no vagrant@192.168.33.10
+    SHELL
+  end
+
+end
