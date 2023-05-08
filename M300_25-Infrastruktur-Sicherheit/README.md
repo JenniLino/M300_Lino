@@ -5,19 +5,19 @@ VM Vagrantfile - Firewall
 ===
 In diesem Beispiel werden zwei virtuelle Maschinen definiert: "firewall" und "web". Beide virtuellen Maschinen basieren auf Ubuntu "Xenial64".
 
-Die "firewall"-VM hat die IP-Adresse "10.0.0.10" und wird über den Hostnamen "Firewall" identifiziert. Diese VM wird über eine Shell-Provisionierung konfiguriert, um das ufw-Paket zu installieren. Danach wird die ufw-Firewall so konfiguriert, dass sie den eingehenden Datenverkehr auf Port 80, eingehenden Datenverkehr von der IP-Adresse "10.0.2.2" auf Port 22 und eingehenden Datenverkehr von der IP-Adresse "10.0.0.20" auf Port 3306 erlaubt.
+Die virtuelle Maschine "firewall" hat die IP-Adresse "10.0.0.11" und wird über den Hostnamen "Firewall" identifiziert. Um die Firewall-Konfiguration durchzuführen, wird eine Shell-Provisionierung verwendet, um das ufw-Paket zu installieren. Anschließend wird die Konfiguration der ufw-Firewall angepasst, um eingehenden Datenverkehr auf Port 80, eingehenden Datenverkehr von der IP-Adresse "10.0.3.2" auf Port 22 und eingehenden Datenverkehr von der IP-Adresse "10.0.0.24" auf Port 3306 zu erlauben.
 ```
 Vagrant.configure("2") do |config|
   config.vm.define :firewall do |firewall|
       firewall.vm.box = "ubuntu/xenial64"
-      firewall.vm.network :private_network, ip: "10.0.0.10"
+      firewall.vm.network :private_network, ip: "10.0.0.11"
       firewall.vm.hostname = "Firewall"
       firewall.vm.provision "shell", inline: <<-SHELL
       apt-get update
       sudo apt-get install ufw
       sudo ufw allow 80/tcp
-      sudo ufw allow from 10.0.2.2 to any port 22
-      sudo ufw allow from 10.0.0.20 to any port 3306
+      sudo ufw allow from 10.0.3.2 to any port 22
+      sudo ufw allow from 10.0.0.24 to any port 3306
       sudo ufw --force enable
       SHELL
   end
@@ -27,7 +27,7 @@ Die "web"-VM hat die IP-Adresse "10.0.0.20" und wird über den Hostnamen "web" i
 ```
 config.vm.define :web do |web|
       web.vm.box = "ubuntu/xenial64"
-      web.vm.network :private_network, ip: "10.0.0.20"
+      web.vm.network :private_network, ip: "10.0.0.24"
       web.vm.hostname = "web"
       web.vm.network "forwarded_port", guest:80, host:8090, auto_correct: true
       web.vm.synced_folder "html/", "/var/www/html"
@@ -42,12 +42,12 @@ VM Vagrantfile - ReverseProxy
 ===
 In diesem Vagrantfile werden ebenfalls zwei Virtuelle Maschinen hergestellt und definiert: eine für einen Reverse Proxy und eine für einen Webserver.
 
-Für den Reverse Proxy wird die "ubuntu/xenial64" Box verwendet und er erhält eine private IP-Adresse von 10.0.0.10 im privaten Netzwerk. Der Reverse Proxy wird so konfiguriert, dass er auf Port 8080 auf dem Hostsystem lauscht und eingehenden Datenverkehr an Port 80 auf der virtuellen Maschine weiterleitet. Der Ordner "Config_File/" auf dem Hostsystem wird mit dem Ordner "/etc/ap0ache2/sites-enabled/" auf der VM synchronisiert, um Konfigurationsdateien auszutauschen. Die virtuelle Maschine wird auch als "reverseproxy" mit dem Hostnamen "reverseproxy" konfiguriert.
+Um den Reverse Proxy einzurichten, wird die Box "ubuntu/xenial64" verwendet und erhält eine private IP-Adresse von 10.0.0.11 im privaten Netzwerk. Der Reverse Proxy wird so konfiguriert, dass er auf Port 8080 auf dem Hostsystem lauscht und den eingehenden Datenverkehr an Port 80 auf der virtuellen Maschine weiterleitet. Der Ordner "Config_File/" auf dem Hostsystem wird mit dem Ordner "/etc/apache2/sites-enabled/" auf der VM synchronisiert, um Konfigurationsdateien auszutauschen. Zusätzlich wird die virtuelle Maschine als "reverseproxy" mit dem Hostnamen "reverseproxy" konfiguriert.
 ```
 Vagrant.configure("2") do |config|
   config.vm.define :reverseproxy do |reverseproxy|
       reverseproxy.vm.box = "ubuntu/xenial64"
-      reverseproxy.vm.network :private_network, ip: "10.0.0.10"
+      reverseproxy.vm.network :private_network, ip: "10.0.0.11"
       reverseproxy.vm.network "forwarded_port", guest:80, host:8080, auto_correct: true
       reverseproxy.vm.synced_folder "Config_File/", "/etc/apache2/sites-enabled/"
       reverseproxy.vm.hostname = "reverseproxy"
@@ -72,7 +72,7 @@ Für den Webserver wird ebenfalls die "ubuntu/xenial64" Box verwendet und er erh
 ```
   config.vm.define :web do |web|
       web.vm.box = "ubuntu/xenial64"
-      web.vm.network :private_network, ip: "10.0.0.20"
+      web.vm.network :private_network, ip: "10.0.0.24"
       web.vm.hostname = "web"
       web.vm.network "forwarded_port", guest:80, host:8090, auto_correct: true
       web.vm.synced_folder "html/", "/var/www/html"
@@ -90,7 +90,7 @@ Bei diesem Vagranfile werden die Vagrantfiles Firewall und ReverseProxy zusammen
 Vagrant.configure("2") do |config|
     config.vm.define :reverseproxy do |reverseproxy|
         reverseproxy.vm.box = "ubuntu/xenial64"
-        reverseproxy.vm.network :private_network, ip: "10.0.0.10"
+        reverseproxy.vm.network :private_network, ip: "10.0.0.11"
         reverseproxy.vm.network "forwarded_port", guest:80, host:8080, auto_correct: true
         reverseproxy.vm.synced_folder "configs/", "/etc/apache2/sites-enabled/"
         reverseproxy.vm.hostname = "reverseproxy"
@@ -124,8 +124,8 @@ Vagrant.configure("2") do |config|
         web.vm.provision "shell", inline: <<-SHELL
         sudo apt-get update
         sudo apt-get -y install apache2 ufw -y
-        sudo ufw allow from 10.0.2.2 to any port 22
-        sudo ufw allow from 10.0.0.10 to any port 80
+        sudo ufw allow from 10.0.3.2 to any port 22
+        sudo ufw allow from 10.0.0.11 to any port 80
         sudo ufw --force enable
         SHELL
     end
@@ -135,7 +135,7 @@ end
 VM Vagrantfile - Authentifizierung und Autorisierung
 ===
 
-In diesem Vagranfile wird wieder die "ubuntu/xenial64" Box verwendet. Die Maschine hat eine statische IP-Adresse und hört auf Port 80 und 443. Der Ordner "config/" auf dem Host-System wird mit dem Ordner "/etc/apache2/sites-available/" auf der VM synchronisiert (In diesem Ordner sind die Konfigurationen drin, die benötigt werden, für das SSL Zertifikat), um Konfigurationsdateien auszutauschen. Dann wird Apache installiert und konfiguriert, um SSL zu unterstützen und ein selbst signiertes SSL-Zertifikat zu generieren. Die Standardkonfiguration von Apache wird deaktiviert und durch die neue Konfiguration ersetzt. In diesem Vagrantfile kann man einen User angeben, sowie den dazu gehöriges Passwort (Mit demm muss man sich dan auf der Website anmelden um reinzukommen). Schliesslich wird der Apache-Dienst neu gestartet
+In diesem Vagrantfile wird erneut die "ubuntu/xenial64" Box verwendet. Die Maschine wird mit einer statischen IP-Adresse konfiguriert und lauscht auf Port 80 und 443. Der Ordner "config/" auf dem Host-System wird mit dem Ordner "/etc/apache2/sites-available/" auf der VM synchronisiert, um Konfigurationsdateien auszutauschen. In diesem Ordner befinden sich die erforderlichen Konfigurationen für das SSL-Zertifikat. Anschließend wird Apache installiert und so konfiguriert, dass es SSL unterstützt und ein selbstsigniertes SSL-Zertifikat generiert. Die Standardkonfiguration von Apache wird deaktiviert und durch die neue Konfiguration ersetzt. In diesem Vagrantfile können auch Benutzername und Passwort für die Website angegeben werden, auf die zugegriffen werden soll. Abschließend wird der Apache-Dienst neu gestartet.
 ```
 Vagrant.configure("2") do |config|
     config.vm.box = "ubuntu/xenial64"
