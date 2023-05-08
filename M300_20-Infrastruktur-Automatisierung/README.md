@@ -24,14 +24,14 @@ vagrant ssh
 5. Hier finden Sie noch die wichtigsten Befehle für Vagrant, einschließlich Anweisungen zum Anhalten oder Löschen der virtuellen Maschine.
 
 
-| Befehl | Beschreibung |
-| ------ | ------------ |
+| Alle Befehle    |
+| ------ | ------ |
 | vagrant up | Startet und provisioniert eine neue virtuelle Maschine |
 | vagrant ssh | Verbindet sich per SSH zur laufenden VM |
 | vagrant halt | Stoppt die laufende VM |
-| vagrant destroy | Löscht die VM und alle zugehörigen Ressourcen |
-| vagrant status | Zeigt den Status aller VMs im aktuellen Verzeichnis an |
 | vagrant init | Initialisiert ein neues Vagrant-Projekt im Verzeichnis |
+| vagrant status | Zeigt den Status aller VMs im aktuellen Verzeichnis an |
+| vagrant destroy | Löscht die VM und alle zugehörigen Ressourcen |
 | vagrant reload | Neustartet die VM und lädt die Vagrant-Konfiguration |
 | vagrant suspend | Pausiert die laufende VM |
 | vagrant resume | Nimmt eine pausierte VM wieder auf |
@@ -40,10 +40,9 @@ vagrant ssh
 
 Packer
 ===
-Schwierigkeiten mit Packer auf windows Systemen
+Schwierigkeiten mit Packer
 
-Es kann vorkommen, dass Packer nur mit Linux und macOS-Systemen funktioniert, da es bei der Verwendung von Windows zu Schwierigkeiten bei der Einrichtung der Virtual Machine kommen kann. Dies liegt daran, dass Packer hauptsächlich für Unix-Systeme entwickelt wurde und einige der notwendigen Abhängigkeiten nicht standardmäßig in Windows enthalten sind. Wenn Sie also Packer verwenden möchten, sollten Sie eine Linux- oder macOS-Maschine verwenden, um eine reibungslose Einrichtung und Verwendung sicherzustellen.Deshalb haben wir AWS auf einem MAC Client konfiguriert.
-
+Es kann vorkommen, dass Packer nur unter Linux- und macOS-Systemen ordnungsgemäß funktioniert. Bei der Verwendung von Windows kann es zu Schwierigkeiten bei der Einrichtung der virtuellen Maschine kommen, da Packer hauptsächlich für Unix-Systeme entwickelt wurde und einige der notwendigen Abhängigkeiten nicht standardmäßig in Windows enthalten sind. Um eine reibungslose Einrichtung und Verwendung von Packer sicherzustellen, empfiehlt es sich daher, eine Linux- oder macOS-Maschine zu verwenden. Deshalb haben wir AWS auf einem Mac-Client konfiguriert.
 Hier eine kruze Anleitung wie man Packer auf Linux installiert
 
 Aktualisieren Sie Ihr Paket-Repository, um sicherzustellen, dass Sie die neuesten verfügbaren Versionen der Pakete installieren
@@ -58,11 +57,11 @@ Laden Sie die neueste Version von Packer von der offiziellen Website herunter. S
 ```
 wget https://www.packer.io/downloads
 ```
-Entpacken Sie das heruntergeladene Packer-Archiv in das Verzeichnis "/usr/local/bin/". Dieses Verzeichnis ist in der Regel bereits in Ihrem PATH enthalten, sodass Sie Packer einfach durch Eingabe des Befehlsnamens verwenden können
+Entpacken Sie das heruntergeladene in das Verzeichnis Packer-Archiv "/usr/local/bin/". Dieses Verzeichnis ist in der Regel bereits in Ihrem PATH enthalten, sodass Sie Packer einfach durch Eingabe des Befehlsnamens verwenden können
 ```
 sudo unzip packer_*_linux_amd64.zip -d /usr/local/bin/
 ```
-Stellen Sie sicher, dass Packer korrekt installiert wurde, indem Sie die Version des installierten Packer-Programms abrufen
+Um sicherzustellen, dass Packer ordnungsgemäß installiert wurde, können Sie die Version des installierten Packer-Programms abrufen.
 ```
 packer version
 ```
@@ -77,7 +76,7 @@ AWS
 ===
 Schwierigkeiten mit Windows Systemen
 
-Da das Vagrant-Plugin "vagrant-aws" nicht mehr aktiv weiterentwickelt wird und möglicherweise nicht mehr mit den neuesten Versionen von Vagrant und AWS kompatibel ist, kann es auf Windows und Linux zu Problemen bei der Installation und Verwendung des Plugins kommen. Dies kann zu Fehlern bei der Konfiguration oder dem Starten von AWS-Instanzen führen. Aus diesem Grund haben wir uns entschieden, mit MacOS zu arbeiten, da Vagrant auf MacOS besser unterstützt wird und somit möglicherweise reibungsloser funktioniert.
+Das Vagrant-Plugin "vagrant-aws" wird nicht mehr aktiv weiterentwickelt und ist möglicherweise nicht mehr mit den neuesten Versionen von Vagrant und AWS kompatibel. Dies kann auf Windows und Linux zu Problemen bei der Installation und Verwendung des Plugins führen, was wiederum zu Fehlern bei der Konfiguration oder dem Starten von AWS-Instanzen führen kann. Aus diesem Grund haben wir uns dafür entschieden, mit MacOS zu arbeiten, da Vagrant auf diesem Betriebssystem besser unterstützt wird und somit möglicherweise reibungsloser funktioniert.
 
 Verbindung mit AWS in Vagrant
 
@@ -95,7 +94,7 @@ $ vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dumm
 
 Folgen Sie diesen Schritten, um AWS für Vagrant vorzubereiten:
 
-1. Öffnen Sie die [AWS-Website](https://aws.amazon.com/de/) und erstellen Sie einen Amazon-Stammbenutzer, falls noch nicht vorhanden.
+1. Öffnen Sie die [AWS-Website] und erstellen Sie einen Amazon-Stammbenutzer, falls noch nicht vorhanden.
 
     
 2. Ändern Sie den Rechenzentrum-Standort auf Frankfurt, um die schnellste Verbindung zu erhalten. Beachten Sie jedoch, dass sich dieser je nach Bedarf ändern kann.
@@ -120,9 +119,9 @@ Folgen Sie diesen Schritten, um AWS für Vagrant vorzubereiten:
 
 
         
-9. Erstellen Sie ein Schlüsselpaar und speichern Sie die .pem-Datei im Hauptverzeichnis des Vagrant-Projekts.
-Wählen Sie "RSA" und ".pem" und laden Sie die Datei mit dem privaten Schlüssel herunter.
-Achten Sie darauf, den Schlüssel nicht auf Github hochzuladen.
+9. Um fortzufahren, erstellen Sie ein Schlüsselpaar und speichern Sie die .pem-Datei im Hauptverzeichnis des Vagrant-Projekts. Wählen Sie bei der Erstellung des Schlüssels die Option "RSA" und die Dateierweiterung ".pem". Anschließend laden Sie die Datei mit dem privaten Schlüssel herunter. Achten Sie darauf, den Schlüssel nicht auf Github hochzuladen, um die Sicherheit Ihrer Umgebung zu gewährleisten.
+
+
 
 ### **Konfiguration des Vagrantfiles**
 
